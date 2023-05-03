@@ -1,25 +1,40 @@
 import "./tagsInput.css"
 
-const TagsInput = (props) => {
+const TagsInput = ({ setTags, tags}) => {
 
-	const removeTags = indexToRemove => {
-		props.setTags([...props.tags.filter((_, index) => index !== indexToRemove)]);
+	/***************************    removeTags    *************************/
+	// Quito tags del Array
+	const removeTags = (indexToRemove) => {
+		setTags([...tags.filter((_, index) => 
+			index !== indexToRemove)]);
 	};
+	/****************************************************************************/
 
-	const addTags = event => {
+	// console.log("tags", tags)
+
+	/***************************    addTags    ***************************/
+	// agrego tags al Array
+	const addTags = (event) => {
+
 		if (event.target.value !== "") {
-			props.setTags([...props.tags, event.target.value]);
-			props.selectedTags([...props.tags, event.target.value]);
+
+			setTags([...tags, event.target.value]);
+			// selectedTags([...tags, event.target.value]);
+
 			event.target.value = "";
 		}
 	};
+	/****************************************************************************/
+
 
 	return (
 		<div className="tagsInput">
       
 			<ul id="tags">
-				{props.tags.map((tag, index) => (
+
+				{tags.map((tag, index) => (
 					<li key={index} className="tag">
+
 						<span className='tag-title'>{tag}</span>
 						<span className='tag-close-icon'
 							onClick={() => removeTags(index)}
@@ -30,10 +45,13 @@ const TagsInput = (props) => {
 				))}
 			</ul>
 
+			{/* Por cada tecla presionada checo si le di Enter
+				de ser asi mando llamar addTags
+			*/}
 			<input
 				type="text"
 				onKeyUp={event => event.key === "Enter" ? addTags(event) : null}
-				placeholder="Press enter to add tags"
+				placeholder="Agrega tags y presiona Enter"
 			/>
 		</div>
 	);

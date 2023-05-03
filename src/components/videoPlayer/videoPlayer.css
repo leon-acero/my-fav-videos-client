@@ -1,4 +1,37 @@
 .videoPlayer {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding-left: 3rem;
+}
+
+.videoPlayer--reactPlayer {
+    margin-bottom: 1rem;
+}
+
+.videoPlayer--videoDetails > p {
+    font-size: 1.8rem;
+    margin-bottom: .6rem;;
+}
+
+.videoPlayer--logoChannel {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+}
+
+.videoPlayer--videoDetails-channel {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.videoPlayer--videoDetails-channelTitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.videoPlayer--videoDetails-myTitle {
+    font-weight: 600;
 }

@@ -1,20 +1,18 @@
 .sidebar {
-  height: calc(100vh - 5rem);
-  flex: 1;
+  height: calc(100vh - 8rem);
+  flex: 2.3;
   align-self: flex-start;
   background-color: rgb(251, 251, 255);
-  /* background-color: gray; */
   position: sticky;
   top: 1rem;
+
+  padding-right: 2.4rem;
+  overflow-x: hidden;
 }
 
 .sidebarWrapper {
   /* padding: .5rem; */
   color: #343a40;
-}
-
-.sidebarMenu {
-  margin-bottom: 1rem;
 }
 
 .sidebarTitle {
@@ -47,10 +45,25 @@
   cursor: pointer;
   border-radius: 1rem;
   font-size: 1.6rem;
+
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.sidebarListItem--tags {
+  font-size: 1.4rem;
+
+  background-color: #0052cc;
+  color: #fff;
+
+  margin-bottom: .4rem;
+  border-radius: .6rem;
+  padding: 0 .8rem;
 }
 
 .sidebarListItem:not(:last-child) {
-  margin-bottom: .3rem;
+  margin-bottom: 1rem;
 }
 
 .sidebarListItem:hover,
@@ -73,14 +86,37 @@
 }
 
 
-.videoSidebar {
-  width: 90%;
+.sidebarListItem--video-thumbnail {
+  width: 24rem;
+  /* height: 24rem; */
+  border-radius: .7rem;
 }
 
 .sidebar--myTitle {
-  font-size: 1rem;
+  font-size: 1.4rem;
   margin-top: .2rem;
-  margin-bottom: 1rem;
+  margin-bottom: .4rem;
+}
+
+.sidebar--myTitle span {
+  font-weight: 600;
+}
+
+.sidebarListItem--videoContainer {
+  position: relative;
+}
+
+.sidebarListItem--video-duration {
+  font-size: 1.35rem;
+  font-weight: 600;
+  background-color: #000;
+  color: #fff;
+  padding: .1rem .3rem;
+  border-radius: .5rem;
+  position: absolute;
+  bottom: .7rem;
+  /* bottom: calc(100% - 95%); */
+  right: .4rem;
 }
 
 

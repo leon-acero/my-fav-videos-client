@@ -2,23 +2,23 @@
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
-	min-height: 48px;
-	width: 480px;
-	padding: 0 8px;
-	border: 1px solid rgb(214, 216, 218);
-	border-radius: 6px;
+	min-height: 4.8rem;
+	width: 48rem;
+	padding: 0 .8rem;
+	border: .1rem solid rgb(214, 216, 218);
+	border-radius: .6rem;
 }
 
 .tagsInput:focus-within {
-	border: 1px solid #0052cc;
+	border: .1rem solid #0052cc;
 }
 
 input {
 	flex: 1;
 	border: none;
-	height: 46px;
-	font-size: 14px;
-	padding: 4px 0 0 0;
+	height: 4.6rem;
+	font-size: 1.4rem;
+	padding: .4rem 0 0 0;
 }
 
 input:focus {
@@ -29,36 +29,36 @@ input:focus {
 	display: flex;
 	flex-wrap: wrap;
 	padding: 0;
-	margin: 8px 0 0 0;
+	margin: .8rem 0 0 0;
 }
 
 .tag {
 	width: auto;
-	height: 32px;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	color: #fff;
-	padding: 0 8px;
-	font-size: 14px;
+	padding: 0 .8rem;
+	font-size: 1.4rem;
 	list-style: none;
-	border-radius: 6px;
-	margin: 0 8px 8px 0;
+	border-radius: .6rem;
+	margin: 0 .8rem .8rem 0;
 	background: #0052cc;
 }
 
 .tag .tag-title {
-  	margin-top: 3px;
+  	margin-top: .3rem;
 }
 
 .tag .tag-close-icon {
 	display: block;
-	width: 16px;
-	height: 16px;
-	line-height: 16px;
+	width: 1.6rem;
+	height: 1.6rem;
+	line-height: 1.6rem;
 	text-align: center;
-	font-size: 14px;
-	margin-left: 8px;
+	font-size: 1.4rem;
+	margin-left: .8rem;
 	color: #0052cc;
 	border-radius: 50%;
 	background: #fff;
@@ -67,6 +67,6 @@ input:focus {
 
 @media screen and (max-width: 567px) {
 	.tagsInput {
-		width: calc(100vw - 32px);
+		width: calc(100vw - 3.2rem);
 	}
 }

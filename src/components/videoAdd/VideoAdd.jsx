@@ -1,15 +1,42 @@
 import './videoAdd.css'
 import TagsInput from '../tagsInput/TagsInput'
 
-import {useState} from "react"
-import axios from "../../utils/axios"
+import {useContext, useState} from "react"
+import axios, { regresaMensajeDeError } from "../../utils/axios"
 import VideoPlayer from '../videoPlayer/VideoPlayer'
+import {FaBookmark, FaSearch} from "react-icons/fa";
+
+import SnackBarCustom from '../../components/snackBarCustom/SnackBarCustom';
+import { CircularProgress } from '@mui/joy'
+import { stateContext } from '../../context/StateProvider'
 
 
 const INITIAL_STATE = { 
   myTitle: "", 
   myDescription: "", 
-  youtubeLink: "",
+  videoUrl: "",
+}
+
+const INITIAL_STATE_ALL_ABOUT_VIDEO = {
+  channelTitle: "", 
+  channelId: "",
+      
+  profileLogoUrl: "", 
+  profileLogoWidth: "", 
+  profileLogoHeight: "", 
+      
+  videoId: "", 
+  videoUrl: "", 
+  originalTitle: "", 
+  originalDescription: "", 
+
+  duration: "", 
+      
+  thumbnailUrl: "", 
+  thumbnailWidth: "", 
+  thumbnailHeight: "",
+
+  user: ""
 }
 
 export default function VideoAdd() {
@@ -19,33 +46,31 @@ export default function VideoAdd() {
 	// allAboutVideo
 	// isSaving
 	// tags
+  // isLoading
 
 	const [itemData, setItemData] = useState (INITIAL_STATE);
 
-  const [allAboutVideo, setAllAboutVideo] = useState ({
-    channelLogo: {},
-    videoDetails: {},
-    videoDuration: ""
-  })
+  const [allAboutVideo, setAllAboutVideo] = useState (INITIAL_STATE_ALL_ABOUT_VIDEO)
+  
+  const [tags, setTags] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [tags, setTags] = useState(['Abs', 'Athlean-X']);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 	/**************************************************************************/
 
+  const { currentUser } = useContext(stateContext);
 
-  /************************     fn = selectedTags    **************************/
-  // 
-  /****************************************************************************/
-  const selectedTags = (tags) => {
-		console.log(tags);
-	};
 
-  /************************     fn = handleChange    **************************/
-  // 
+  /************************     fn = handleInputChange    *********************/
+  // Maneja el cambio en los inputs de la pagina y actualiza sus states
   /****************************************************************************/
-	const handleChange = (event) => {
+	const handleInputChange = (event) => {
     // console.log(event)
+    // console.log("handleInputChange")
 
     const {name, value, type, checked} = event.target
     setItemData(prevFormData => {
@@ -56,54 +81,102 @@ export default function VideoAdd() {
     })
   }
 
-  /************************     fn = handleSubmit    **************************/
-  // 
+  /************************     fn = handleSubmitVideoUrl    *******************/
+  // Hace POST para cargar un Video de Youtube y obtener su informacion
   /****************************************************************************/
-  const handleSubmit = async (e) => {
+  const handleSubmitVideoUrl = async (e) => {
     e.preventDefault();
+
+    // console.log("handleSubmitVideoUrl")
       
     try {
 
+      setIsLoading(true);
       const res = await axios.post ('/api/v1/greatVideos/search-youtube', 
       {    
-        youtubeLink : itemData.youtubeLink,
+        videoUrl : itemData.videoUrl,
       });
 
-      // console.log("res", res.data.data);
+      // console.log("res", res);
+      setIsLoading(false);
 
-      // Esta es la informacion que me regresa el Youtube API
-      setAllAboutVideo({
-        channelLogo: {
-          url: res.data.data.channelLogo.medium.url,
-          width: res.data.data.channelLogo.medium.width,
-          height: res.data.data.channelLogo.medium.height
-        },
+      setAllAboutVideo(
+        {
+        channelTitle: res.data.data.channelTitle, 
+        channelId: res.data.data.channelId,
+            
+        profileLogoUrl: res.data.data.profileLogoUrl, 
+        profileLogoWidth: res.data.data.profileLogoWidth, 
+        profileLogoHeight: res.data.data.profileLogoHeight, 
+            
+        // Info del Video
+        videoId: res.data.data.videoId, 
+        videoUrl: res.data.data.videoUrl, 
+        originalTitle: res.data.data.originalTitle, 
+        originalDescription: res.data.data.originalDescription, 
 
-        videoDetails: {
-          videoId: res.data.data.videoDetails.items[0].id,
-          channelId: res.data.data.videoDetails.items[0].snippet.channelId,
-          channelTitle: res.data.data.videoDetails.items[0].snippet.channelTitle,
-          videoTitle: res.data.data.videoDetails.items[0].snippet.title,
-          videoDescription: res.data.data.videoDetails.items[0].snippet.description,
-          videoThumbnailUrl: res.data.data.videoDetails.items[0].snippet.thumbnails.maxres.url,
-          videoThumbnailHeight: res.data.data.videoDetails.items[0].snippet.thumbnails.maxres.height,
-          videoThumbnailWidth: res.data.data.videoDetails.items[0].snippet.thumbnails.maxres.width
-        },
-        
-        videoDuration: res.data.data.videoDuration
-      })
+        duration: res.data.data.duration, 
+            
+        // Info del Thumbnail del Video
+        thumbnailUrl: res.data.data.thumbnailUrl, 
+        thumbnailWidth: res.data.data.thumbnailWidth, 
+        thumbnailHeight: res.data.data.thumbnailHeight,
+
+        user: currentUser._id,
+      });
+
+      let tempArray = []
+      if (res?.data?.data?.channelTitle)
+        tempArray.push(res.data.data.channelTitle)
+
+      if (res?.data?.data?.originalTitle)
+        tempArray.push(res.data.data.originalTitle)
+
+      setTags(tempArray);
+      setItemData(prevFormData =>  {
+        return {
+          ...prevFormData, myTitle: "", myDescription: ""
+        }
+      });
+
     }
     catch(err) {
       console.log(err);
+      setIsLoading(false);
+
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar (regresaMensajeDeError(err));
+      setOpenSnackbar(true); 
     }
   }
 
 
-  /**********************     fn = handleAgregarAMiLista    *******************/
-  // 
+  /**********************     fn = handleSubmitNewGreatVideo    ****************/
+  // Hace POST para agregar un video a la Base de Datos
   /****************************************************************************/	
-  const handleAgregarAMiLista = async (e) => {
+  const handleSubmitNewGreatVideo = async (e) => {
     e.preventDefault();
+
+    if (allAboutVideo.channelId === "") {
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar ("Busca un video antes de grabar");
+      setOpenSnackbar(true); 
+      return;
+    }
+
+    if (itemData.myTitle === "") {
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar ("Agrega un Título al video antes de grabar");
+      setOpenSnackbar(true); 
+      return;
+    }
+
+    if (tags.length === 0) {
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar ("Agrega por lo menos un Tag antes de grabar");
+      setOpenSnackbar(true); 
+      return;
+    }
 
     if (isSaving)
       return;
@@ -111,42 +184,43 @@ export default function VideoAdd() {
     try {
       setIsSaving(true);
      
-      console.log(tags)
+      // console.log(tags)
 
       const res = await axios.post ('/api/v1/greatVideos', {
         "myTitle": itemData.myTitle,
         "myDescription": itemData.myDescription,
   
-	      "channelTitle": allAboutVideo.videoDetails.channelTitle,
-        "channelId": allAboutVideo.videoDetails.channelId,
-        "videoId": allAboutVideo.videoDetails.videoId,
-        "videoUrl": itemData.youtubeLink,
-        "originalTitle": allAboutVideo.videoDetails.videoTitle,
-        "originalDescription": allAboutVideo.videoDetails.videoDescription,
-        "thumbnailUrl": allAboutVideo.videoDetails.videoThumbnailUrl,
-        "thumbnailWidth": allAboutVideo.videoDetails.videoThumbnailWidth,
-        "thumbnailHeight": allAboutVideo.videoDetails.videoThumbnailHeight,
+	      "channelTitle": allAboutVideo.channelTitle,
+        "channelId": allAboutVideo.channelId,
+        "videoId": allAboutVideo.videoId,
+        "videoUrl": allAboutVideo.videoUrl,
+        "originalTitle": allAboutVideo.originalTitle,
+        "originalDescription": allAboutVideo.originalDescription,
+        "thumbnailUrl": allAboutVideo.thumbnailUrl,
+        "thumbnailWidth": allAboutVideo.thumbnailWidth,
+        "thumbnailHeight": allAboutVideo.thumbnailHeight,
   
-        "profileLogoUrl": allAboutVideo.channelLogo.url,
-        "profileLogoWidth": allAboutVideo.channelLogo.width,
-        "profileLogoHeight": allAboutVideo.channelLogo.height,
+        "profileLogoUrl": allAboutVideo.profileLogoUrl,
+        "profileLogoWidth": allAboutVideo.profileLogoWidth,
+        "profileLogoHeight": allAboutVideo.profileLogoHeight,
   
-        "duration": allAboutVideo.videoDuration,
+        "duration": allAboutVideo.duration,
         
-        "tags": tags,      
+        "tags": tags,
+        "user": allAboutVideo.user
       } );
 
       setIsSaving(false);
 
       if (res.data.status === 'success') {
-        // alert ('Logged in succesfully!');
-        // console.log(res.data.data.data);
-        console.log ('Se agregó con éxito!');
-        // setIconoSnackBarDeExito(true);
-        // setMensajeSnackBar("El Cliente fue creado")
-        // setOpenSnackbar(true);
+        setIconoSnackBarDeExito(true);
+        setMensajeSnackBar("El Video fue agregado")
+        setOpenSnackbar(true);
 
+        // Limpia los inputs y states para cargar un nuevo video
         setItemData(INITIAL_STATE);
+        setAllAboutVideo(INITIAL_STATE_ALL_ABOUT_VIDEO);
+        setTags([]);
       } 
     }
     catch(err) {
@@ -154,72 +228,134 @@ export default function VideoAdd() {
 
       setIsSaving(false);
               
-      // setIconoSnackBarDeExito(false);
-      // setMensajeSnackBar (regresaMensajeDeError(err));
-
-      // setOpenSnackbar(true);      
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar (regresaMensajeDeError(err));
+      setOpenSnackbar(true);      
     }
   }
-
 
   return (
     <div className='videoAdd'>
 
-      <form className='videoAdd--buscarVideo' onSubmit={handleSubmit}> 
-        <label htmlFor='youtubeLink'>Agrega el link de tu video favorito</label>
+      <SnackBarCustom 
+        openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+        iconoSnackBarDeExito={iconoSnackBarDeExito} />
 
-        <input 
-            className="inputGeneralDataType"
-            placeholder="https://youtube.com/" 
-            onChange={handleChange}
-            name="youtubeLink"
-            value={itemData.youtubeLink}  
-            required
-        />
-        <button>Obten informacion del Video</button>
+      {/* Esta es la form donde pones el url de un video */}
+      <form className='videoAdd--buscarVideo' onSubmit={handleSubmitVideoUrl}>
+
+        <div className='videoAdd--buscarVideo-container'>
+          <label htmlFor='videoUrl'>Agrega el link de tu video favorito</label>
+
+          <input 
+              className="inputGeneralDataType"
+              placeholder="https://youtube.com/" 
+              onChange={handleInputChange}
+              name="videoUrl"
+              value={itemData.videoUrl}  
+              required
+          />
+        </div>
+        
+        {
+          isLoading 
+          ? 
+            <button className='videoAdd--cargandoInformacion-button'
+                    disabled={false}>
+              <CircularProgress size="sm" />
+            </button>
+          :
+            <button className='button'
+                    disabled={false}>
+              <span className='button__text'>
+                Buscar
+              </span>
+              <span className='button__icon'>
+                <FaSearch />
+              </span>
+            </button>
+        }        
       </form>
 
-			<VideoPlayer link={itemData.youtubeLink}/>
+      {/* Este es el div para que el usuario capture los datos de un video 
+          como Titulo, Descripcion y tags.
+          Tambien se muestra el video que se cargó
+      */}
+      <div className='videoAdd--container'>
+        <div className='videoAdd--videoPlayer'>
+          <VideoPlayer video={allAboutVideo}/>
+        </div>
+
+        <div className='videoAdd--detailsSection'>
+          <div className='videoAdd--detailsSection-form'>
+        
+            <label htmlFor='myTitle'>Título (obligatorio)</label>
+            <input 
+                className="inputGeneralDataType"
+                placeholder="Ejemplo: Pierna -- Athlean-X" 
+                onChange={handleInputChange}
+                name="myTitle"
+                value={itemData.myTitle}  
+                required
+            />
+          </div>
+
+          <div className='videoAdd--detailsSection-form'>
+            <label htmlFor='myDescription'>Descripción (opcional)</label>
+            <textarea 
+                className="inputGeneralDataType textareaStyle"
+                placeholder="Esta es una guía de ejercicios para Cuadríceps" 
+                onChange={handleInputChange}
+                name="myDescription"
+                value={itemData.myDescription}  
+            />
+          </div>
+
       
-      <p>Duracion: {allAboutVideo.videoDuration}</p>
-      <p>Video Title: {allAboutVideo.videoDetails.videoTitle}</p>
-      <p>Channel Title: {allAboutVideo.videoDetails.channelTitle}</p>
-      <img src={allAboutVideo.channelLogo.url} alt={allAboutVideo.channelLogo.url} />
+          <TagsInput setTags={setTags} tags={tags}/>
 
-      <br />
+          <form className='videoAdd--createForm' 
+                onSubmit={handleSubmitNewGreatVideo}>
 
-      <form onSubmit={handleAgregarAMiLista}>
-        <label htmlFor='myTitle'>My Title</label>
+            {
+              isSaving 
+              ? 
+                <button className='videoAdd--cargandoInformacion-button'
+                        disabled={false}>
+                  <CircularProgress size="sm" />
+                </button>
+              :
+                <button className='button'
+                        disabled={false}>
+                  <span className='button__text'>
+                    Grabar
+                  </span>
+                  <span className='button__icon'>
+                    <FaBookmark />
+                  </span>
+                </button>
+            }  
 
-        <input 
-            className="inputGeneralDataType"
-            placeholder="" 
-            onChange={handleChange}
-            name="myTitle"
-            value={itemData.myTitle}  
-            required
-        />
+            {/* <button className={isSaving 
+                            ? 'videoAdd--cargandoInformacion-button' 
+                            : 'button'}
+                    disabled={isSaving}>
+              <span className={isSaving 
+                                ? 'button__text-disabled' 
+                                : 'button__text'}>
+                    Grabar
+              </span>
+              <span className={isSaving 
+                                ? 'button__icon-disabled' 
+                                : 'button__icon'}>
+                    <FaBookmark />
+              </span>
+            </button> */}
+          </form> 
+        </div>
 
-        <label htmlFor='myDescription'>My Description</label>
-
-        <input 
-            className="inputGeneralDataType"
-            placeholder="" 
-            onChange={handleChange}
-            name="myDescription"
-            value={itemData.myDescription}  
-            required
-        />
-        <TagsInput selectedTags={selectedTags} setTags={setTags} tags={tags}/>
-  
-        <button 
-          className="newClientButton" 
-          disabled={isSaving}
-        >
-         {isSaving ? 'Grabando...' : 'Agregar a mi Lista'}
-        </button>
-      </form>
-
+      </div>
+      
     </div>
   )
 }

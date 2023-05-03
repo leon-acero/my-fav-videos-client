@@ -1,9 +1,261 @@
 .videoAdd {
-    height: calc(100vh - 5rem);
+    height: calc(100vh - 8rem);
     overflow-x: hidden;
     flex: 4;
 }
 
 .videoAdd--buscarVideo {
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.videoAdd--buscarVideo  label {
+    /* margin-left: 3rem; */
+    font-size: 1.6rem;
+}
+
+.inputGeneralDataType{
+    width: 48rem;
+    height: 3.2rem;
+    padding: 1rem 1rem;
+    border: .1rem solid gray;
+    border-radius: .5rem;
+    font-size: 1.4rem;
+}
+
+.textareaStyle {
+    height: 12rem;
+    resize: none;
+}
+
+.videoAdd--buscarVideo-button,
+.videoAdd--createButton {
+    width: 23rem;
+    padding: .7rem 1rem;
+    border: none;
+    border-radius: .3rem;
+    color: white;
+    cursor: pointer;
+  
+    background: #197fec;
+    border: 1px solid; 
+    border-color: #225184 #639bd6;
+    border: none;
+    border-color: none;
+  
+    font-size: 1.4rem;
+    font-weight: 400;
+} 
+
+.videoAdd--videoPlayer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.4rem;
+    flex: 1;
+}
+
+.videoAdd--detailsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.videoAdd--detailsSection-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     margin-bottom: 2rem;
 }
+
+.videoAdd--detailsSection-form label {
+    font-size: 1.45rem;
+    margin-bottom: .4rem;
+}
+
+.videoAdd--buscarVideo-container label {
+    margin-right: 2rem;
+}
+
+.videoAdd--buscarVideo-container input {
+    margin-right: 2rem;
+}
+
+.videoAdd--cargandoInformacion-button {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    width: 16rem;
+    height: 3.2rem;
+    padding: 0 4.8rem;
+    
+    background: #016ee2;
+    border: none;
+    border-radius: .3rem;
+    overflow: hidden;
+}
+
+.videoAdd--createForm {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+}
+
+.videoAdd--createButton {
+    /* margin-bottom: 7rem; */
+
+}
+
+.videoAdd--container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.button {
+    display: inline-flex;
+    padding: 0;
+    border: none;
+    border-radius: .5rem;
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    border-radius: .3rem;
+    color: white;
+  
+    background: #016ee2;
+  
+    font-size: 1.4rem;
+    font-weight: 400;
+    height: 3.2rem;
+    width: 16rem;
+}
+
+.button:hover {
+    background: #005ab9;
+}
+
+.button:active {
+    background: #01468f;
+}
+
+.button__text,
+.button__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2.4rem;
+    color: #fff;
+    /* temporal */
+    width: 8rem; 
+    /* height: 100%; */
+}
+
+.button__icon {
+    /* importante uso em y no rem ya uqe uso el font-size del parent
+        osea de .button que es 1.6rem */
+    font-size: 1.5em;
+    background: rgba(0,0,0,.08);
+}
+
+
+/* .button {
+    display: inline-flex;
+    padding: 0;
+    background: #009578;
+    border: none;
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    border-radius: .3rem;
+    color: white;
+  
+    background: #016ee2;
+  
+    font-size: 1.4rem;
+    font-weight: 400;
+} */
+
+/* .videoAdd--button-disabled {
+    padding: 0 4.8rem;
+    width: 12rem; 
+} */
+
+.button__text-disabled,
+.button__icon-disabled {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 2.4rem;
+    color: #2c2525;
+    /* temporal */
+    width: 8rem; 
+}
+
+.button__icon-disabled {
+    /* importante uso em y no rem ya uqe uso el font-size del parent
+        osea de .button que es 1.6rem */
+    font-size: 1.5em;
+    background: rgba(0,0,0,.08);
+}
+
+/* .button__charging {
+    background-color: rgb(239, 209, 209); 
+    color: #2c2525;
+    // width: 23rem; 
+    border-color: none;
+    border: none;
+} */
+
+
+/* 
+ORIGINAL DE 
+https://www.youtube.com/watch?v=A7G-kAyfxqY&t=13s
+
+.button {
+    display: inline-flex;
+    height: 5rem;
+    padding: 0;
+    background: #009578;
+    border: none;
+    border-radius: .5rem;
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #008168;
+}
+
+.button:active {
+    background: #006e58;
+}
+
+.button__text,
+.button__icon {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 2.4rem;
+    color: #fff;
+    height: 100%;
+}
+
+.button__icon {
+    // importante uso em y no rem ya uqe uso el font-size del parent
+    // osea de .button que es 1.6rem 
+    font-size: 1.5em;
+    background: rgba(0,0,0,.08);
+} */

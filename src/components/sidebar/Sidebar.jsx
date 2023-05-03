@@ -14,7 +14,7 @@ export default function Sidebar() {
   /*****************************************************************************/
 
   const handleClick = (currentVideo) => {
-    console.log("currentVideo", currentVideo)
+    // console.log("currentVideo", currentVideo)
     setVideoSeleccionado (currentVideo)
   }
 
@@ -23,56 +23,67 @@ export default function Sidebar() {
     <div className="sidebar">
       <div className="sidebarWrapper">
 
-        <div className="sidebarMenu">
+        <ul className="sidebarList">
+        {
+          listaDeVideos && (
+            listaDeVideos.map((cur, index) => {
+              // console.log("cur.tags", cur.tags)
 
-          <ul className="sidebarList">
-
-          {
-            listaDeVideos && (
-              listaDeVideos.map((cur, index) => {
-                // console.log("cur.thumnbailUrl", cur.thumbnailUrl)
-
-                return (
-                <li key={index} className="sidebarListItem" 
+              return (
+                <li key={cur._id} className="sidebarListItem" 
                     onClick={()=>handleClick(cur)}>
-                  <img
-                    className='videoSidebar' 
-                    src={cur.thumbnailUrl} 
-                    alt="thumbnail" 
-                  />
-                  <p className='sidebar--myTitle'>My Title: {cur.myTitle}</p>
+                  
+                  <div className='sidebarListItem--videoContainer'>
+                    <img
+                      className='sidebarListItem--video-thumbnail' 
+                      src={cur.thumbnailUrl} 
+                      alt="thumbnail" 
+                    />
+                    <span className='sidebarListItem--video-duration'>
+                    {cur.duration}
+                    </span>
+                  </div>
+                  
+                  <div className='sidebarListItem--video-info'>
+                    <p className='sidebar--myTitle'><span>{cur.myTitle}</span></p>
+                    <p className='sidebar--myTitle'>{cur.originalTitle}</p>
+                    {
+                      cur.tags.map((tag, index) => 
+                        <p className='sidebarListItem--tags' key={index}>{tag}</p>
+                      )
+                    }
+                  </div>
+                  
                 </li> ) 
-                }                           
-              )
-            ) 
-          }
-            {/* <li className="sidebarListItem">
-              TEXT
-            </li>
+              }                           
+            )
+          ) 
+        }
+          {/* <li className="sidebarListItem">
+            TEXT
+          </li>
 
-            <li className="sidebarListItem">
-              TEXT
-            </li>
+          <li className="sidebarListItem">
+            TEXT
+          </li>
 
-            <li className="sidebarListItem">
-              TEXT
-            </li>
+          <li className="sidebarListItem">
+            TEXT
+          </li>
 
-            <li className="sidebarListItem">
-              TEXT
-            </li>
+          <li className="sidebarListItem">
+            TEXT
+          </li>
 
-            <li className="sidebarListItem">
-              TEXT
-            </li>
+          <li className="sidebarListItem">
+            TEXT
+          </li>
 
-            <li className="sidebarListItem">
-              TEXT
-            </li> */}
+          <li className="sidebarListItem">
+            TEXT
+          </li> */}
 
-          </ul>
-
-        </div>
+        </ul>
 
       </div>
     </div>
